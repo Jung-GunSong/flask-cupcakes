@@ -27,7 +27,7 @@ def show_cupcakes():
     """show data about all cupcakes"""
 
     cupcakes = Cupcake.query.all()
-    serialized = [cupcake.serialize() for cupcake in cupcakes]
+    serialized = [cupcake.to_dict() for cupcake in cupcakes]
     # TODO: combine two above lines
 
     return jsonify(cupcakes=serialized)
@@ -37,7 +37,7 @@ def show_cupcake(id):
     """show data about single cupcake"""
 
     cupcake = Cupcake.query.get_or_404(id)
-    serialized = cupcake.serialize()
+    serialized = cupcake.to_dict()
     # TODO: combine sealized into return statement
 
     return jsonify(cupcake=serialized)
@@ -57,7 +57,39 @@ def create_cupcake():
     db.session.add(new_cupcake)
     db.session.commit()
 
-    serialized = new_cupcake.serialize()
+    serialized = new_cupcake.to_dict()
     # TODO: combine serialized with return statement
     return (jsonify(cupcake=serialized), 201)
+
+@app.patch("/api/cupcakes/<int:id>")
+def edit_cupcake(id):
+    """edit cupcake"""
+
+    cupcake = Cupcake.query.get_or_404(id)
+    data = request.json
+    for attr in data:
+        if attr == "flavor":
+            cupcake.flavor = data[f"{attr}"]
+        elif attr == "size":
+            cupcake.size = data[f"{attr}"]
+        elif attr == "rating":
+            cupcake.rating = data[f"{attr}"]
+        elif attr == "image_url":
+            cupcake.image_url = data[f"{attr}"]
+
+    db.session.commit()
+
+    serialized = cupcake.to_dict()
+
+    return jsonify(cupcake=serialized)
+
+@app.delete("/api/cupcakes/<int:id>")
+def delete_cupcake(id):
+    """delete cupcake from database"""
+
+    cupcake = Cupcake.query.get_or_404(id)
+    db.session.delete(cupcake)
+    db.session.commit()
+
+    return jsonify(deleted=[id])
 

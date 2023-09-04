@@ -15,8 +15,7 @@ class Cupcake(db.Model):
     """creates instances of cupcakes"""
     __tablename__ = "cupcakes"
 
-    def serialize(self):
-        # TODO: rename to to_dict
+    def to_dict(self):
         """serialize to dict"""
 
         return {"id": self.id,

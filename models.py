@@ -15,6 +15,15 @@ class Cupcake(db.Model):
 
     __tablename__ = "cupcakes"
 
+    def serialize(self):
+        """serialize to dict"""
+
+        return {"id": self.id,
+                "flavor": self.flavor,
+                "size": self.size,
+                 "rating": self.rating,
+                  "image_url": self.image_url }
+
     id = db.Column(
         db.Integer,
         primary_key = True

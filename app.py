@@ -1,7 +1,7 @@
 """Flask app for Cupcakes"""
 import os
 
-from flask import Flask, redirect, render_template,flash, jsonify
+from flask import Flask, redirect, render_template,flash, jsonify, request
 from flask_debugtoolbar import DebugToolbarExtension
 
 from models import db, connect_db, Cupcake
@@ -28,35 +28,36 @@ def show_cupcakes():
 
     cupcakes = Cupcake.query.all()
     serialized = [cupcake.serialize() for cupcake in cupcakes]
+    # TODO: combine two above lines
 
     return jsonify(cupcakes=serialized)
 
 @app.get("/api/cupcakes/<int:id>")
-def show_cupcake(cupcake_id):
+def show_cupcake(id):
     """show data about single cupcake"""
 
-    cupcake = Cupcake.query.get_or_404(cupcake_id)
+    cupcake = Cupcake.query.get_or_404(id)
     serialized = cupcake.serialize()
+    # TODO: combine sealized into return statement
 
     return jsonify(cupcake=serialized)
 
 @app.post("/api/cupcakes")
 def create_cupcake():
     """create cupcake with client's properties"""
-
-    id = request.json["id"]
+    # TODO: replace request.json with a var
     flavor = request.json["flavor"]
     size = request.json["size"]
     rating = request.json["rating"]
     image_url = request.json["image_url"]
-
-    new_cupcake = Cupcake(id=id, flavor=flavor, size=size,
+    # TODO: combine data into return statement
+    new_cupcake = Cupcake(flavor=flavor, size=size,
                           rating=rating, image_url=image_url)
 
     db.session.add(new_cupcake)
     db.session.commit()
 
     serialized = new_cupcake.serialize()
-
-    return jsonify(cupcake=serialized)
+    # TODO: combine serialized with return statement
+    return (jsonify(cupcake=serialized), 201)
 

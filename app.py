@@ -91,5 +91,5 @@ def delete_cupcake(id):
     db.session.delete(cupcake)
     db.session.commit()
 
-    return jsonify(deleted=[id])
+    return jsonify(deleted=id)
 
